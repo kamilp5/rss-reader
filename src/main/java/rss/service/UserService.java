@@ -3,9 +3,11 @@ package rss.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import rss.repository.UserRepository;
 import rss.user.User;
 
+@Service
 public class UserService {
 
     private UserRepository userRepository;
@@ -27,6 +29,9 @@ public class UserService {
 
     private boolean isEmailAvailable(String email) {
         return userRepository.getUserByEmail(email).isEmpty();
+    }
+    public User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email).orElseThrow();
     }
 
 
