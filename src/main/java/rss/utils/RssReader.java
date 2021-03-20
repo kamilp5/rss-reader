@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @Component
 public class RssReader {
 
-    public RssFeed getRssFeed(String url) {
+    public RssFeed createRssFeed(String url) {
         SyndFeed feedData = getFeedData(url);
         RssFeed rssFeed = new RssFeed();
         rssFeed.setTitle(feedData.getTitle());
