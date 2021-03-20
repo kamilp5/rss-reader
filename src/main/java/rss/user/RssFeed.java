@@ -1,9 +1,9 @@
 package rss.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,5 +18,6 @@ public class RssFeed {
     private String imageUrl;
 
     @OneToMany(mappedBy = "rssFeed", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<RssItem> rssItems;
 }

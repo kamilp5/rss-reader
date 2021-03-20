@@ -13,11 +13,11 @@ public class RssItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(length = 999)
     private String description;
     private String imageUrl;
     private String url;
     private Timestamp date;
     @ManyToOne
-    @JoinColumn(name = "rssFeed_id")
     private RssFeed rssFeed;
 }

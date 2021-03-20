@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
                 .and()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrf().disable();
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 }

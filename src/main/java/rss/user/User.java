@@ -15,6 +15,10 @@ public class User {
     private String email;
     private String password;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<RssFeed> rssFeeds;
+
+    public void addFeed(RssFeed rssFeed){
+        getRssFeeds().add(rssFeed);
+    }
 }
