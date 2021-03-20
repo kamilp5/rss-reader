@@ -1,6 +1,8 @@
 package rss.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import rss.repository.RssFeedRepository;
 import rss.repository.RssItemRepository;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 public class RssService {
 
 
@@ -50,6 +53,12 @@ public class RssService {
         return rssFeed;
     }
 
+    public void unsubscribeRssFeed(Long id) {
+        User user = userService.getLoggedUser();
+        user.getRssFeeds().removeIf(f -> f.getId().equals(id));
+        userService.saveUser(user);
+    }
+
     public List<RssFeed> getRssFeeds() {
         User user = userService.getLoggedUser();
         return user.getRssFeeds();
@@ -59,9 +68,13 @@ public class RssService {
         return rssFeedRepository.getOne(id).getRssItems();
     }
 
-    public void unsubscribeRssFeed(Long id) {
-        User user = userService.getLoggedUser();
-        user.getRssFeeds().removeIf(f -> f.getId().equals(id));
-        userService.saveUser(user);
+    @Scheduled(fixedRate = 1800000)
+    public void fetchRssItems(){
+        List<RssFeed> rssFeeds = rssFeedRepository.findAll();
+        for(RssFeed rssFeed: rssFeeds) {
+            List<RssItem> rssItems = rssReader.getFeedItems(rssFeed);
+            rssItems.forEach(i -> i.setRssFeed(rssFeed));
+            rssItemRepository.saveAll(rssItems);
+        }
     }
 }
