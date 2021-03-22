@@ -1,1 +1,32 @@
-<p>login work.s!</p>
+<div style="text-align: center">
+  <form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
+    <h1>Login</h1>
+    <div style="color: red;" [hidden]="!loginError">
+      Invalid username or password.
+    </div>
+    <hr>
+    <mat-form-field class="full-width">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput formControlName="email" [errorStateMatcher]="matcher"
+             placeholder="Ex. pat@example.com">
+
+      <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+        Please enter a valid email address
+      </mat-error>
+      <mat-error *ngIf="email.hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password">
+      <mat-error *ngIf="password.hasError('required')">
+        Password is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="primary">Submit</button>
+
+  </form>
+</div>
