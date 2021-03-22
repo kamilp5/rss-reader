@@ -1,0 +1,15 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.mat-toolbar.mat-primary {
+  background: #52958B;
+  color: #fff;
+}
+.mat-toolbar-row {
+  justify-content: center;
+}
+.toolbar-link{
+  font-size: 20px;
+  width: 70px;
+
+}
