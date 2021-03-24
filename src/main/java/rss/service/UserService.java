@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rss.repository.UserRepository;
 import rss.user.User;
+import rss.utils.UserAlreadyExistsException;
 
 @Service
 public class UserService {
@@ -22,23 +23,26 @@ public class UserService {
 
 
     public User createUser(User user) {
-        if (isEmailAvailable(user.getEmail())) {
-            PasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-        }
+        checkEmailAvailability(user.getEmail());
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
 
-    private boolean isEmailAvailable(String email) {
-        return userRepository.getUserByEmail(email).isEmpty();
+    private void checkEmailAvailability(String email) {
+        if (userRepository.getUserByEmail(email).isPresent()) {
+            throw new UserAlreadyExistsException("User with email: " + email + " already exists");
+        }
     }
+
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email).orElseThrow();
     }
 
-    public User saveUser(User user){
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 

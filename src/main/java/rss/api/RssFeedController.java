@@ -1,8 +1,6 @@
 package rss.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rss.service.RssService;
 import rss.user.RssFeed;
@@ -29,6 +27,7 @@ public class RssFeedController {
     public List<RssFeed> getRssFeeds(){
         return rssService.getRssFeeds();
     }
+
     @GetMapping("/api/rssFeeds/{id}")
     public List<RssItem> getRssFeedItems(@PathVariable Long id){
         return rssService.getRssFeedItems(id);
