@@ -2,7 +2,7 @@
   <a href="">
     <img style="width: 92px; height: 65px; margin: 0; display: block;" src="./assets/rss.png"/>
   </a>
-
+  <a class="nav-link clickable"style=" margin-left: 15px" *ngIf="authenticated()" (click)="onAddRssFeedClick()" >Add Feed</a>
   <span class="example-spacer"></span>
 
   <a mat-icon-button *ngIf="authenticated()" class="toolbar-link" (click)=logout()>

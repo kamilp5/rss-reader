@@ -2,7 +2,7 @@
   flex: 1 1 auto;
 }
 .mat-toolbar.mat-primary {
-  background: #52958B;
+  background: #343A40;
   color: #fff;
 }
 .mat-toolbar-row {
@@ -12,4 +12,8 @@
   font-size: 20px;
   width: 70px;
 
+}
+
+.clickable {
+  cursor: pointer;
 }

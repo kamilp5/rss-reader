@@ -12,7 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import {HttpClientModule} from "@angular/common/http";
 // import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import {MatInputModule} from "@angular/material/input";
@@ -20,13 +20,16 @@ import { MainComponent } from './main/main.component';
 import {MatListModule} from '@angular/material/list';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
+import { NewFeedDialogComponent } from './new-feed-dialog/new-feed-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    MainComponent
+    MainComponent,
+    NewFeedDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,9 @@ import {MatCardModule} from "@angular/material/card";
     MatInputModule,
     MatListModule,
     MatGridListModule,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule,
+    FormsModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

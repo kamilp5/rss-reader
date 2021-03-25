@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, ReplaySubject} from "rxjs";
+import {RssFeed} from "../model/rssFeed";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MainService {
+
+  newFeedStream: ReplaySubject<RssFeed> = new ReplaySubject();
+
 
   constructor(private http: HttpClient) { }
 
@@ -17,5 +21,20 @@ export class MainService {
   getRssItems(feedId: number): Observable<any>{
     const url = `/api/rssFeeds/${feedId}`;
     return this.http.get(url)
+  }
+
+  saveRssFeed(newFeedUrl: string) {
+    this.http.post<RssFeed>('/api/rssFeeds', newFeedUrl).subscribe(response => {
+      this.newFeedStream.next(response);
+    })
+  }
+
+  unsubscribeRssFeed(feedId): Observable<any> {
+    const url = `/api/rssFeeds/${feedId}`;
+    return this.http.put(url,null)
+  }
+
+  newFeed(): Observable<RssFeed>{
+    return this.newFeedStream.asObservable();
   }
 }

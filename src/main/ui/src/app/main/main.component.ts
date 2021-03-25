@@ -13,10 +13,20 @@ export class MainComponent implements OnInit {
 
   rssFeeds: RssFeed[] = [];
   rssItems: RssItem[] = [];
+  isFeedChosen: boolean = false;
+  chosenFeed: RssFeed = new class implements RssFeed {
+    id: number;
+    title: string;
+    url: string;
+  }
+
   constructor(private mainService: MainService, private userService: UserService) {
   }
 
   ngOnInit(): void {
+    this.mainService.newFeed().subscribe(() => {
+      this.getFeeds();
+    })
     if (this.userService.authenticated) {
       this.getFeeds();
     }
@@ -29,8 +39,19 @@ export class MainComponent implements OnInit {
   }
 
   getRssItems(feed: RssFeed) {
-    this.mainService.getRssItems(feed.id).subscribe(response =>{
+    this.chosenFeed = feed;
+    this.isFeedChosen = true;
+    this.mainService.getRssItems(feed.id).subscribe(response => {
       this.rssItems = response;
     })
+  }
+
+  unsubscribeFeed(feedId: number){
+    this.mainService.unsubscribeRssFeed(feedId).subscribe()
+    this.getFeeds()
+  }
+
+  authenticated() {
+    return this.userService.authenticated;
   }
 }

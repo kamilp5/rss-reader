@@ -1,30 +1,37 @@
-<div class="row container">
-  <mat-selection-list class="rss-feeds" [multiple]="false">
-    <mat-list-option *ngFor="let feed of rssFeeds" [value]="feed">
-      <a (click)="getRssItems(feed)">
-        {{feed.title}}
-      </a>
-    </mat-list-option>
-  </mat-selection-list>
+<div class="row container" *ngIf="authenticated()">
+  <div>
+    <h2 style="margin-left: 20px">Your feeds</h2>
+    <mat-selection-list style="padding-top: 0" class="rss-feeds" [multiple]="false">
+      <mat-list-option *ngFor="let feed of rssFeeds" [value]="feed">
+        <a (click)="getRssItems(feed)">
+          {{feed.title}}
+        </a>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
 
   <div>
-    <mat-card  class="example-card rss-item hover" *ngFor="let item of rssItems">
+    <h2 style="text-align: center" >{{chosenFeed.title}}</h2>
+    <mat-card class="example-card rss-item hover" *ngFor="let item of rssItems">
       <a class="row" style="text-decoration: none; color: #495057" href="{{item.url}}">
         <img style="width: 300px; height: 200px; margin: auto;" mat-card-image
              src="{{item.imageUrl}}" alt="thumbnail">
         <div class="item-details">
-          <mat-card-header style="padding-left: 0">
+          <mat-card-header style="margin-left: -16px">
             <mat-card-title>{{item.title}}</mat-card-title>
             <mat-card-subtitle>{{item.date | date:'MMM d, y, H:mm:ss'}}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <p>
-              {{item.description}}
+              <small>{{item.description}}</small>
             </p>
           </mat-card-content>
         </div>
       </a>
     </mat-card>
+    <div [hidden]="!isFeedChosen">
+      <a (click)="unsubscribeFeed(chosenFeed.id)" class="text-danger" href="#">Delete {{chosenFeed.title}}</a>
+    </div>
   </div>
 
 </div>
