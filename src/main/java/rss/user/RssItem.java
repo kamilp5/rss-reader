@@ -1,5 +1,6 @@
 package rss.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,5 +20,6 @@ public class RssItem {
     private String url;
     private Timestamp date;
     @ManyToOne
+    @JsonIgnore
     private RssFeed rssFeed;
 }

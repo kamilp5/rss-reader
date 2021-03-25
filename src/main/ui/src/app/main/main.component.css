@@ -1,0 +1,30 @@
+.container{
+  height: 100%;
+  width:1200px;
+  margin: 0 auto;
+  padding-top: 50px;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start
+}
+
+.rss-feeds{
+  width: 200px;
+  margin-right: 30px;
+}
+.rss-item{
+  width: 970px;
+  /*height: 300px;*/
+}
+
+.item-details{
+  margin-left: 15px;
+  height: 200px;
+  width: 640px;
+  overflow: hidden;
+}
+.hover:hover {
+  background-color: #F5F5F5;
+}

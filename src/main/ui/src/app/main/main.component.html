@@ -1,0 +1,30 @@
+<div class="row container">
+  <mat-selection-list class="rss-feeds" [multiple]="false">
+    <mat-list-option *ngFor="let feed of rssFeeds" [value]="feed">
+      <a (click)="getRssItems(feed)">
+        {{feed.title}}
+      </a>
+    </mat-list-option>
+  </mat-selection-list>
+
+  <div>
+    <mat-card  class="example-card rss-item hover" *ngFor="let item of rssItems">
+      <a class="row" style="text-decoration: none; color: #495057" href="{{item.url}}">
+        <img style="width: 300px; height: 200px; margin: auto;" mat-card-image
+             src="{{item.imageUrl}}" alt="thumbnail">
+        <div class="item-details">
+          <mat-card-header style="padding-left: 0">
+            <mat-card-title>{{item.title}}</mat-card-title>
+            <mat-card-subtitle>{{item.date | date:'MMM d, y, H:mm:ss'}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              {{item.description}}
+            </p>
+          </mat-card-content>
+        </div>
+      </a>
+    </mat-card>
+  </div>
+
+</div>
