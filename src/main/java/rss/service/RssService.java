@@ -9,10 +9,12 @@ import rss.repository.RssItemRepository;
 import rss.user.RssFeed;
 import rss.user.RssItem;
 import rss.user.User;
+import rss.user.UserFeed;
 import rss.utils.RssReader;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @EnableScheduling
@@ -40,7 +42,7 @@ public class RssService {
     public RssFeed subscribeRss(String url) {
         Optional<RssFeed> optionalRssFeed = rssFeedRepository.findByUrl(url);
         User user = userService.getLoggedUser();
-        RssFeed rssFeed ;
+        RssFeed rssFeed;
 
         if (optionalRssFeed.isPresent()) {
             rssFeed = optionalRssFeed.get();
@@ -55,25 +57,30 @@ public class RssService {
 
     public void unsubscribeRssFeed(Long id) {
         User user = userService.getLoggedUser();
-        user.getRssFeeds().removeIf(f -> f.getId().equals(id));
+        user.getRssFeeds().removeIf(f -> f.getId().getRssFeedId().equals(id));
         userService.saveUser(user);
     }
 
-    public List<RssFeed> getRssFeeds() {
+    public List<UserFeed> getRssFeeds() {
         User user = userService.getLoggedUser();
         return user.getRssFeeds();
     }
 
-    public List<RssItem> getRssFeedItems(Long id) {
-        return rssFeedRepository.getOne(id).getRssItems();
+    public List<RssItem> getRssFeedItems(Long feedId) {
+        List<RssItem> items = rssItemRepository.getAllByRssFeedId(feedId);
+        List<RssItem> seenItems = userService.getLoggedUser().getSeenRssItems();
+        items.forEach(i -> i.setAlreadySeen(seenItems.contains(i)));
+        return items;
     }
 
     @Scheduled(fixedRate = 1800000)
-    public void fetchRssItems(){
+    public void fetchRssItems() {
         List<RssFeed> rssFeeds = rssFeedRepository.findAll();
-        for(RssFeed rssFeed: rssFeeds) {
+        for (RssFeed rssFeed : rssFeeds) {
             List<RssItem> rssItems = rssReader.getFeedItems(rssFeed);
-            rssItems.forEach(i -> i.setRssFeed(rssFeed));
+            rssItems = rssItems.stream()
+                    .filter(i -> rssItemRepository.getByUrl(i.getUrl()).isEmpty())
+                    .collect(Collectors.toList());
             rssItemRepository.saveAll(rssItems);
         }
     }

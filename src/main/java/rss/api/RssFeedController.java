@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import rss.service.RssService;
 import rss.user.RssFeed;
 import rss.user.RssItem;
+import rss.user.UserFeed;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class RssFeedController {
     }
 
     @GetMapping("/api/rssFeeds")
-    public List<RssFeed> getRssFeeds(){
+    public List<UserFeed> getRssFeeds(){
         return rssService.getRssFeeds();
     }
 

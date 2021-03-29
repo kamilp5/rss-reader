@@ -22,4 +22,7 @@ public class RssItem {
     @ManyToOne
     @JsonIgnore
     private RssFeed rssFeed;
+
+    @Transient
+    private boolean alreadySeen;
 }
