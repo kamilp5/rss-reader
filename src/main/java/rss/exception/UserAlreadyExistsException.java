@@ -1,4 +1,4 @@
-package rss.utils;
+package rss.exception;
 
 public class UserAlreadyExistsException extends RuntimeException{
     public UserAlreadyExistsException(String message) {

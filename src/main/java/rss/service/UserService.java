@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rss.repository.UserRepository;
 import rss.user.User;
-import rss.utils.UserAlreadyExistsException;
+import rss.exception.UserAlreadyExistsException;
 
 @Service
 public class UserService {

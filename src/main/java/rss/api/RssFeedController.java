@@ -2,10 +2,10 @@ package rss.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import rss.dto.RssFeedDto;
+import rss.dto.RssItemDto;
 import rss.service.RssService;
 import rss.user.RssFeed;
-import rss.user.RssItem;
-import rss.user.UserFeed;
 
 import java.util.List;
 
@@ -20,23 +20,27 @@ public class RssFeedController {
     }
 
     @PostMapping("/api/rssFeeds")
-    public RssFeed subscribeRssFeed(@RequestBody String url){
+    public RssFeed subscribeRssFeed(@RequestBody String url) {
         return rssService.subscribeRss(url);
     }
 
     @GetMapping("/api/rssFeeds")
-    public List<UserFeed> getRssFeeds(){
+    public List<RssFeedDto> getRssFeeds() {
         return rssService.getRssFeeds();
     }
 
     @GetMapping("/api/rssFeeds/{id}")
-    public List<RssItem> getRssFeedItems(@PathVariable Long id){
+    public List<RssItemDto> getRssFeedItems(@PathVariable Long id) {
         return rssService.getRssFeedItems(id);
     }
 
-    @PutMapping("/api/rssFeeds/{id}")
-    public void unsubscribeRssFeed(@PathVariable Long id){
+    @DeleteMapping("/api/rssFeeds/{id}")
+    public void unsubscribeRssFeed(@PathVariable Long id) {
         rssService.unsubscribeRssFeed(id);
     }
 
+    @PutMapping("/api/rssFeeds/{id}")
+    public void updateLastOpenedDate(@PathVariable Long id) {
+        rssService.updateLastOpenedDate(id);
+    }
 }

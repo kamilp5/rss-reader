@@ -7,6 +7,7 @@ import com.rometools.rome.io.XmlReader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
+import rss.exception.RssNotFoundException;
 import rss.user.RssFeed;
 import rss.user.RssItem;
 

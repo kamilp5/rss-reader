@@ -2,11 +2,10 @@ package rss.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import rss.service.UserService;
 import rss.user.User;
-import rss.utils.UserAlreadyExistsException;
+import rss.exception.UserAlreadyExistsException;
 
 import java.security.Principal;
 

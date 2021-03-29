@@ -4,14 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import rss.dto.RssFeedDto;
+import rss.dto.RssFeedMapper;
+import rss.dto.RssItemDto;
+import rss.dto.RssItemMapper;
 import rss.repository.RssFeedRepository;
 import rss.repository.RssItemRepository;
 import rss.user.RssFeed;
 import rss.user.RssItem;
 import rss.user.User;
 import rss.user.UserFeed;
+import rss.exception.RssNotFoundException;
 import rss.utils.RssReader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,14 +31,17 @@ public class RssService {
     private RssItemRepository rssItemRepository;
     private UserService userService;
     private RssReader rssReader;
-
+    private RssFeedMapper rssFeedMapper;
+    private RssItemMapper rssItemMapper;
 
     @Autowired
-    public RssService(RssFeedRepository rssFeedRepository, RssItemRepository rssItemRepository, UserService userService, RssReader rssReader) {
+    public RssService(RssFeedRepository rssFeedRepository, RssItemRepository rssItemRepository, UserService userService, RssReader rssReader, RssFeedMapper rssFeedMapper, RssItemMapper rssItemMapper) {
         this.rssFeedRepository = rssFeedRepository;
         this.rssItemRepository = rssItemRepository;
         this.userService = userService;
         this.rssReader = rssReader;
+        this.rssFeedMapper = rssFeedMapper;
+        this.rssItemMapper = rssItemMapper;
     }
 
     public RssFeed saveRssFeed(RssFeed rssFeed) {
@@ -61,16 +70,34 @@ public class RssService {
         userService.saveUser(user);
     }
 
-    public List<UserFeed> getRssFeeds() {
+    public List<RssFeedDto> getRssFeeds() {
         User user = userService.getLoggedUser();
-        return user.getRssFeeds();
+        List<UserFeed> userFeeds = user.getRssFeeds();
+        List<RssFeedDto> rssFeedDtos = rssFeedMapper.toDtoList(userFeeds);
+        for (RssFeedDto dto : rssFeedDtos) {
+            dto.setHasNewItems(rssItemRepository.existsByDateAfterAndRssFeedId(dto.getLastOpenedDate(), dto.getId()));
+        }
+
+        return rssFeedDtos;
     }
 
-    public List<RssItem> getRssFeedItems(Long feedId) {
+    public List<RssItemDto> getRssFeedItems(Long feedId) {
+        User user = userService.getLoggedUser();
         List<RssItem> items = rssItemRepository.getAllByRssFeedId(feedId);
-        List<RssItem> seenItems = userService.getLoggedUser().getSeenRssItems();
-        items.forEach(i -> i.setAlreadySeen(seenItems.contains(i)));
-        return items;
+        List<RssItem> seenItems = user.getSeenRssItems();
+
+        return setupItemsDto(items, seenItems);
+    }
+
+    private List<RssItemDto> setupItemsDto(List<RssItem> items, List<RssItem> seenItems) {
+        List<RssItemDto> rssItemDtos = new ArrayList<>();
+
+        for (RssItem item : items) {
+            RssItemDto dto = rssItemMapper.toDto(item);
+            dto.setAlreadySeen(seenItems.contains(item));
+            rssItemDtos.add(dto);
+        }
+        return rssItemDtos;
     }
 
     @Scheduled(fixedRate = 1800000)
@@ -83,5 +110,16 @@ public class RssService {
                     .collect(Collectors.toList());
             rssItemRepository.saveAll(rssItems);
         }
+    }
+
+    public void updateLastOpenedDate(Long id) {
+        User user = userService.getLoggedUser();
+        RssItem newestItem = rssItemRepository.getNewestItemByRssFeedId(id);
+        UserFeed userFeed = user.getRssFeeds().stream()
+                .filter(f -> f.getRssFeed().getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RssNotFoundException(id));
+        userFeed.setLastOpenedDate(newestItem.getDate());
+        userService.saveUser(user);
     }
 }
