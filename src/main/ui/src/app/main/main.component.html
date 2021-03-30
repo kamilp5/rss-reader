@@ -1,21 +1,22 @@
 <div class="row container" *ngIf="authenticated()">
   <div>
     <h2 style="margin-left: 20px">Your feeds</h2>
-    <mat-selection-list style="padding-top: 0" class="rss-feeds" [multiple]="false">
-      <mat-list-option *ngFor="let feed of rssFeeds" [value]="feed">
-        <a (click)="getRssItems(feed)">
-          {{feed.title}}
-        </a>
-      </mat-list-option>
-    </mat-selection-list>
+    <mat-action-list style="padding-top: 0" class="rss-feeds">
+      <button class="list-button" mat-list-item (click)="getRssItems(feed)" *ngFor="let feed of rssFeeds"
+              [value]="feed">
+        <img src="../../assets/new2.png" class="new-feed-label" [hidden]="feed.hasNewItems === false">
+        {{feed.title}}
+      </button>
+    </mat-action-list>
   </div>
 
   <div>
-    <h2 style="text-align: center" >{{chosenFeed.title}}</h2>
+    <h2 style="text-align: center">{{chosenFeed.title}}</h2>
     <mat-card class="example-card rss-item hover" *ngFor="let item of rssItems">
       <a class="row" style="text-decoration: none; color: #495057" href="{{item.url}}">
         <img style="width: 300px; height: 200px; margin: auto;" mat-card-image
              src="{{item.imageUrl}}" alt="thumbnail">
+        <img src="../../assets/new.png" class="new-item-label" [hidden]="item.alreadySeen === true">
         <div class="item-details">
           <mat-card-header style="margin-left: -16px">
             <mat-card-title>{{item.title}}</mat-card-title>

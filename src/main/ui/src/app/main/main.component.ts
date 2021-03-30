@@ -14,11 +14,7 @@ export class MainComponent implements OnInit {
   rssFeeds: RssFeed[] = [];
   rssItems: RssItem[] = [];
   isFeedChosen: boolean = false;
-  chosenFeed: RssFeed = new class implements RssFeed {
-    id: number;
-    title: string;
-    url: string;
-  }
+  chosenFeed: RssFeed = new RssFeed();
 
   constructor(private mainService: MainService, private userService: UserService) {
   }
@@ -39,6 +35,8 @@ export class MainComponent implements OnInit {
   }
 
   getRssItems(feed: RssFeed) {
+    console.log("click")
+    this.updateLastOpenedDate(feed.id)
     this.chosenFeed = feed;
     this.isFeedChosen = true;
     this.mainService.getRssItems(feed.id).subscribe(response => {
@@ -46,12 +44,17 @@ export class MainComponent implements OnInit {
     })
   }
 
-  unsubscribeFeed(feedId: number){
+  unsubscribeFeed(feedId: number) {
     this.mainService.unsubscribeRssFeed(feedId).subscribe()
     this.getFeeds()
   }
 
   authenticated() {
     return this.userService.authenticated;
+  }
+
+  updateLastOpenedDate(feedId: number) {
+    this.rssFeeds.find(f => f.id == feedId).hasNewItems = false;
+    this.mainService.updateLastOpenedDate(feedId).subscribe()
   }
 }

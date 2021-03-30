@@ -1,5 +1,6 @@
-export interface RssFeed{
+export class RssFeed{
   id: number;
   title: string;
-  url: string
+  url: string;
+  hasNewItems: boolean;
 }

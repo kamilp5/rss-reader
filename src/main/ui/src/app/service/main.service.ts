@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, ReplaySubject} from "rxjs";
 import {RssFeed} from "../model/rssFeed";
@@ -11,14 +11,15 @@ export class MainService {
   newFeedStream: ReplaySubject<RssFeed> = new ReplaySubject();
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
 
-  getFeeds(): Observable<any>{
+  getFeeds(): Observable<any> {
     return this.http.get('/api/rssFeeds');
   }
 
-  getRssItems(feedId: number): Observable<any>{
+  getRssItems(feedId: number): Observable<any> {
     const url = `/api/rssFeeds/${feedId}`;
     return this.http.get(url)
   }
@@ -31,10 +32,15 @@ export class MainService {
 
   unsubscribeRssFeed(feedId): Observable<any> {
     const url = `/api/rssFeeds/${feedId}`;
-    return this.http.put(url,null)
+    return this.http.delete(url, null)
   }
 
-  newFeed(): Observable<RssFeed>{
+  newFeed(): Observable<RssFeed> {
     return this.newFeedStream.asObservable();
+  }
+
+  updateLastOpenedDate(feedId: number): Observable<any> {
+    const url = `/api/rssFeeds/${feedId}`;
+    return this.http.put(url, null)
   }
 }

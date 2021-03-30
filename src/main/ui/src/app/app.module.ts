@@ -48,7 +48,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatGridListModule,
     MatCardModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
