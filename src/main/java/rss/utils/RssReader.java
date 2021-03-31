@@ -15,11 +15,13 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 public class RssReader {
+    private static final String DEFAULT_IMAGE_URL = "https://i.imgur.com/1pRo7pS.png";
 
     public RssFeed createRssFeed(String url) {
         SyndFeed feedData = getFeedData(url);
@@ -51,13 +53,24 @@ public class RssReader {
         item.setUrl(entry.getLink());
         item.setRssFeed(rssFeed);
 
+        item.setImageUrl(findImageUrl(entry)
+                .orElse(DEFAULT_IMAGE_URL));
+        findImageUrl(entry);
+        return item;
+    }
+
+    private Optional<String> findImageUrl(SyndEntry entry) {
         String rx = "https?:/(?:/[^/]+)+\\.(?:jpg|gif|png|jpeg)";
         Pattern pattern = Pattern.compile(rx);
         Matcher matcher = pattern.matcher(entry.toString());
         if(matcher.find()) {
-            item.setImageUrl(matcher.group());
+            String url = matcher.group();
+            if(url.length() > 255){
+                url = url.substring(0,254);
+            }
+            return Optional.of(url);
         }
-        return item;
+        return Optional.empty();
     }
 
     private String extractDescription(SyndEntry entry){
@@ -65,7 +78,7 @@ public class RssReader {
             return "";
         }
         Document doc = Jsoup.parse(entry.getDescription().getValue());
-        String d = doc.getAllElements().text();
+        String d = doc.text();
         if(d.length() > 999) {
             d = d.substring(0, 998);
         }

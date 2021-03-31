@@ -15,7 +15,8 @@
     <mat-card class="example-card rss-item hover" *ngFor="let item of rssItems">
       <a class="row" style="text-decoration: none; color: #495057" href="{{item.url}}">
         <img style="width: 300px; height: 200px; margin: auto;" mat-card-image
-             src="{{item.imageUrl}}" alt="thumbnail">
+             src="{{item.imageUrl}}" alt="thumbnail"
+              onerror="this.src='https://i.imgur.com/1pRo7pS.png'">
         <img src="../../assets/new.png" class="new-item-label" [hidden]="item.alreadySeen === true">
         <div class="item-details">
           <mat-card-header style="margin-left: -16px">
