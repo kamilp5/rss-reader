@@ -17,6 +17,7 @@ public class RssItemMapper {
         dto.setDescription(rssItem.getDescription());
         dto.setImageUrl(rssItem.getImageUrl());
         dto.setUrl(rssItem.getUrl());
+        dto.setAlreadySeen(rssItem.isAlreadySeen());
         return dto;
     }
 

@@ -1,6 +1,8 @@
 package rss.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -81,23 +83,23 @@ public class RssService {
         return rssFeedDtos;
     }
 
-    public List<RssItemDto> getRssFeedItems(Long feedId) {
+    public Page<RssItemDto> getRssFeedItems(Long feedId, Pageable pageable) {
         User user = userService.getLoggedUser();
-        List<RssItem> items = rssItemRepository.getAllByRssFeedId(feedId);
+        Page<RssItem> items = rssItemRepository.getAllByRssFeedId(feedId, pageable);
         List<RssItem> seenItems = user.getSeenRssItems();
+        items = setAlreadySeen(items, seenItems);
 
-        return setupItemsDto(items, seenItems);
+        seenItems.addAll(items.stream().filter(i -> !(seenItems.contains(i))).collect(Collectors.toList()));
+        userService.saveUser(user);
+
+        return items.map(rssItemMapper::toDto);
     }
 
-    private List<RssItemDto> setupItemsDto(List<RssItem> items, List<RssItem> seenItems) {
-        List<RssItemDto> rssItemDtos = new ArrayList<>();
-
+    private Page<RssItem> setAlreadySeen(Page<RssItem> items, List<RssItem> seenItems) {
         for (RssItem item : items) {
-            RssItemDto dto = rssItemMapper.toDto(item);
-            dto.setAlreadySeen(seenItems.contains(item));
-            rssItemDtos.add(dto);
+            item.setAlreadySeen(seenItems.contains(item));
         }
-        return rssItemDtos;
+        return items;
     }
 
     @Scheduled(fixedRate = 1800000)

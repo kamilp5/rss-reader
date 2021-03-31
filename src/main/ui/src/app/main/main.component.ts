@@ -16,6 +16,11 @@ export class MainComponent implements OnInit {
   isFeedChosen: boolean = false;
   chosenFeed: RssFeed = new RssFeed();
 
+  totalElements: number;
+  pageNumber: number = 0;
+  pageSize: number = 50;
+  pageSizeOptions: number[] = [20,50,100]
+
   constructor(private mainService: MainService, private userService: UserService) {
   }
 
@@ -34,13 +39,17 @@ export class MainComponent implements OnInit {
     })
   }
 
-  getRssItems(feed: RssFeed) {
-    console.log("click")
-    this.updateLastOpenedDate(feed.id)
+  clickOnFeed(feed: RssFeed){
     this.chosenFeed = feed;
     this.isFeedChosen = true;
-    this.mainService.getRssItems(feed.id).subscribe(response => {
-      this.rssItems = response;
+    this.updateLastOpenedDate(feed.id);
+    this.getRssItems(feed);
+  }
+
+  getRssItems(feed: RssFeed) {
+    this.mainService.getRssItems(feed.id, this.pageNumber, this.pageSize).subscribe(response => {
+      this.totalElements = response.totalElements
+      this.rssItems = response.content;
     })
   }
 
@@ -56,5 +65,12 @@ export class MainComponent implements OnInit {
   updateLastOpenedDate(feedId: number) {
     this.rssFeeds.find(f => f.id == feedId).hasNewItems = false;
     this.mainService.updateLastOpenedDate(feedId).subscribe()
+  }
+
+  changePage(event) {
+    this.pageNumber = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getRssItems(this.chosenFeed);
+    scroll(0,0)
   }
 }

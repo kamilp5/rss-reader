@@ -19,8 +19,8 @@ export class MainService {
     return this.http.get('/api/rssFeeds');
   }
 
-  getRssItems(feedId: number): Observable<any> {
-    const url = `/api/rssFeeds/${feedId}`;
+  getRssItems(feedId: number, page: number, size: number): Observable<any> {
+    const url = `/api/rssFeeds/${feedId}?page=${page}&size=${size}`;
     return this.http.get(url)
   }
 

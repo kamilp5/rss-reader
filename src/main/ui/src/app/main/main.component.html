@@ -2,7 +2,7 @@
   <div>
     <h2 style="margin-left: 20px">Your feeds</h2>
     <mat-action-list style="padding-top: 0" class="rss-feeds">
-      <button class="list-button" mat-list-item (click)="getRssItems(feed)" *ngFor="let feed of rssFeeds"
+      <button class="list-button" mat-list-item (click)="clickOnFeed(feed)" *ngFor="let feed of rssFeeds"
               [value]="feed">
         <img src="../../assets/new2.png" class="new-feed-label" [hidden]="feed.hasNewItems === false">
         {{feed.title}}
@@ -30,9 +30,18 @@
         </div>
       </a>
     </mat-card>
-    <div [hidden]="!isFeedChosen">
-      <a (click)="unsubscribeFeed(chosenFeed.id)" class="text-danger" href="#">Delete {{chosenFeed.title}}</a>
+    <div [hidden]="!isFeedChosen" class="row">
+      <div>
+        <a (click)="unsubscribeFeed(chosenFeed.id)" class="text-danger" href="#">Delete {{chosenFeed.title}}</a>
+      </div>
     </div>
+      <mat-paginator class="paginator-background"
+                     [length]="totalElements"
+                     [pageIndex]="pageNumber"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     (page)="changePage($event)">
+      </mat-paginator>
   </div>
 
 </div>

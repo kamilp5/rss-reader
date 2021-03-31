@@ -1,6 +1,10 @@
 package rss.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 import rss.dto.RssFeedDto;
 import rss.dto.RssItemDto;
@@ -30,8 +34,9 @@ public class RssFeedController {
     }
 
     @GetMapping("/api/rssFeeds/{id}")
-    public List<RssItemDto> getRssFeedItems(@PathVariable Long id) {
-        return rssService.getRssFeedItems(id);
+    public Page<RssItemDto> getRssFeedItems(@PathVariable Long id,
+                                            @SortDefault(sort = "date" ,direction = Sort.Direction.DESC)Pageable pageable) {
+        return rssService.getRssFeedItems(id, pageable);
     }
 
     @DeleteMapping("/api/rssFeeds/{id}")
