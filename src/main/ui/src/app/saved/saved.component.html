@@ -1,27 +1,13 @@
 <div class="row container" *ngIf="authenticated()">
   <div>
-    <h2 style="margin-left: 20px">Your feeds</h2>
-    <mat-action-list style="padding-top: 0" class="rss-feeds">
-      <button class="list-button" mat-list-item (click)="clickOnFeed(feed)" *ngFor="let feed of rssFeeds"
-              [value]="feed">
-        <img src="../../assets/new2.png" class="new-feed-label" [hidden]="feed.hasNewItems === false">
-        {{feed.title}}
-      </button>
-    </mat-action-list>
-  </div>
-
-  <div>
-    <h2 style="text-align: center">{{chosenFeed.title}}</h2>
     <mat-card class="example-card rss-item hover" *ngFor="let item of rssItems">
-      <button mat-icon-button class="example-icon save_item_icon" aria-label="Example icon-button with share icon"
-              (click)="addItemToSaved(item.id)">
-        <mat-icon>save</mat-icon>
+      <button mat-icon-button class="example-icon delete_item_icon"   aria-label="Example icon-button with share icon" (click)="deleteItemFromSaved(item.id)">
+        <mat-icon>delete</mat-icon>
       </button>
       <a class="row" style="text-decoration: none; color: #495057" href="{{item.url}}">
         <img style="width: 300px; height: 200px; margin: auto;" mat-card-image
              src="{{item.imageUrl}}" alt="thumbnail"
              onerror="this.src='https://i.imgur.com/1pRo7pS.png'">
-        <img src="../../assets/new.png" class="new-item-label" [hidden]="item.alreadySeen === true">
         <div class="item-details">
           <mat-card-header style="margin-left: -16px">
             <mat-card-title>{{item.title}}</mat-card-title>
@@ -35,11 +21,6 @@
         </div>
       </a>
     </mat-card>
-    <div [hidden]="!isFeedChosen" class="row">
-      <div>
-        <a (click)="unsubscribeFeed(chosenFeed.id)" class="text-danger" href="#">Delete {{chosenFeed.title}}</a>
-      </div>
-    </div>
     <mat-paginator class="paginator-background"
                    [length]="totalElements"
                    [pageIndex]="pageNumber"

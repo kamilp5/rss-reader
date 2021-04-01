@@ -55,3 +55,8 @@
   top: 0px;
   left: 0px;
 }
+.save_item_icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

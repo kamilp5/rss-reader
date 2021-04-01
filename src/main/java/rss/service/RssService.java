@@ -19,7 +19,6 @@ import rss.user.UserFeed;
 import rss.exception.RssNotFoundException;
 import rss.utils.RssReader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -122,6 +121,28 @@ public class RssService {
                 .findFirst()
                 .orElseThrow(() -> new RssNotFoundException(id));
         userFeed.setLastOpenedDate(newestItem.getDate());
+        userService.saveUser(user);
+    }
+
+    public void addRssItemToSaved(Long id) {
+        User user = userService.getLoggedUser();
+        if(rssItemRepository.isRssItemInUserSaved(user.getId(),id).isPresent()){
+            return;
+        }
+        RssItem item = rssItemRepository.getOne(id);
+        user.getSavedRssItems().add(item);
+        userService.saveUser(user);
+    }
+
+    public Page<RssItemDto> getSavedRssItems(Pageable pageable){
+        User user = userService.getLoggedUser();
+        Page<RssItem> items = rssItemRepository.getUserSavedRssItems(user.getId(), pageable);
+        return items.map(rssItemMapper::toDto);
+    }
+
+    public void deleteRssItemFromSaved(Long id) {
+        User user = userService.getLoggedUser();
+        user.getSavedRssItems().removeIf(i -> i.getId().equals(id));
         userService.saveUser(user);
     }
 }

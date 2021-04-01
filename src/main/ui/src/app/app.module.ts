@@ -23,6 +23,9 @@ import {MatCardModule} from "@angular/material/card";
 import { NewFeedDialogComponent } from './new-feed-dialog/new-feed-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { SavedComponent } from './saved/saved.component';
+import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -42,7 +45,9 @@ export class XhrInterceptor implements HttpInterceptor {
     LoginComponent,
     RegisterComponent,
     MainComponent,
-    NewFeedDialogComponent
+    NewFeedDialogComponent,
+    SavedComponent,
+    ScrollToTopComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +67,8 @@ export class XhrInterceptor implements HttpInterceptor {
     MatCardModule,
     MatDialogModule,
     FormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},

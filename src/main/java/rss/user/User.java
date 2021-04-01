@@ -22,6 +22,9 @@ public class User {
     @ManyToMany
     private List<RssItem> seenRssItems;
 
+    @ManyToMany
+    private List<RssItem> savedRssItems;
+
     public void addFeed(RssFeed rssFeed){
         UserFeed userFeed = new UserFeed(this,rssFeed);
         getRssFeeds().add(userFeed);

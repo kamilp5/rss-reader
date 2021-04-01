@@ -1,0 +1,34 @@
+.container {
+  height: 100%;
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 50px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start
+}
+
+.rss-item {
+  width: 970px;
+  margin-bottom: 2px;
+}
+
+.item-details {
+  margin-left: 15px;
+  height: 200px;
+  width: 640px;
+  overflow: hidden;
+}
+
+.hover:hover {
+  background-color: #F5F5F5;
+}
+
+.delete_item_icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

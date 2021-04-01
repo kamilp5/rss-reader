@@ -22,4 +22,16 @@ public interface RssItemRepository extends JpaRepository<RssItem, Long> {
             " r.date = (SELECT MAX(s.date) FROM rss_item s WHERE s.rss_feed_id = ?1) " +
             "AND r.rss_feed_id = ?1", nativeQuery = true)
     RssItem getNewestItemByRssFeedId(Long rssFeedId);
+
+    @Query(value = "SELECT * FROM rssreader.rss_item i " +
+            "LEFT JOIN rssreader.user_saved_rss_items s ON s.saved_rss_items_id = i.id " +
+            "WHERE s.user_id = ?1",
+            nativeQuery = true)
+    Page<RssItem> getUserSavedRssItems(Long userId, Pageable pageable);
+
+    @Query(value = "SELECT * FROM rssreader.rss_item i " +
+            "LEFT JOIN rssreader.user_saved_rss_items s ON s.saved_rss_items_id = i.id " +
+            "WHERE s.user_id = ?1 AND s.saved_rss_items_id = ?2",
+            nativeQuery = true)
+    Optional<RssItem> isRssItemInUserSaved(Long userId, Long rssItemId);
 }

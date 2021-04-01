@@ -48,4 +48,19 @@ public class RssFeedController {
     public void updateLastOpenedDate(@PathVariable Long id) {
         rssService.updateLastOpenedDate(id);
     }
+
+    @PostMapping("/api/rssFeeds/saved")
+    public void addRssItemToSaved(@RequestBody Long id){
+        rssService.addRssItemToSaved(id);
+    }
+
+    @GetMapping("/api/rssFeeds/saved")
+    public Page<RssItemDto> getUserSavedRssItems(Pageable pageable){
+        return rssService.getSavedRssItems(pageable);
+    }
+
+    @DeleteMapping("/api/rssFeeds/saved/{id}")
+    public void deleteRssItemFromSaved(@PathVariable Long id){
+        rssService.deleteRssItemFromSaved(id);
+    }
 }

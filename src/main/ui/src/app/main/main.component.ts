@@ -3,6 +3,8 @@ import {RssFeed} from "../model/rssFeed";
 import {MainService} from "../service/main.service";
 import {UserService} from "../service/user.service";
 import {RssItem} from "../model/rssItem";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MySnackBar} from "../service/my-snack-bar";
 
 @Component({
   selector: 'app-main',
@@ -21,7 +23,7 @@ export class MainComponent implements OnInit {
   pageSize: number = 50;
   pageSizeOptions: number[] = [20,50,100]
 
-  constructor(private mainService: MainService, private userService: UserService) {
+  constructor(private mainService: MainService, private userService: UserService, public snackBar: MySnackBar) {
   }
 
   ngOnInit(): void {
@@ -33,6 +35,11 @@ export class MainComponent implements OnInit {
     }
   }
 
+  addItemToSaved(itemId:number){
+    this.mainService.addItemToSaved(itemId).subscribe(()=>{
+      this.snackBar.openSnackBar("Added item to saved")
+    })
+  }
   getFeeds(): void {
     this.mainService.getFeeds().subscribe(response => {
       this.rssFeeds = response;
@@ -40,6 +47,7 @@ export class MainComponent implements OnInit {
   }
 
   clickOnFeed(feed: RssFeed){
+    this.pageNumber = 0;
     this.chosenFeed = feed;
     this.isFeedChosen = true;
     this.updateLastOpenedDate(feed.id);
