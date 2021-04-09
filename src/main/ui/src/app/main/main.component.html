@@ -2,7 +2,7 @@
   <div>
     <h2 style="margin-left: 20px">Your feeds</h2>
     <mat-action-list style="padding-top: 0" class="rss-feeds">
-      <button class="list-button" mat-list-item (click)="clickOnFeed(feed)" *ngFor="let feed of rssFeeds"
+      <button class="list-button" style="height: fit-content; min-height: 48px" mat-list-item (click)="clickOnFeed(feed)" *ngFor="let feed of rssFeeds"
               [value]="feed">
         <img src="../../assets/new2.png" class="new-feed-label" [hidden]="feed.hasNewItems === false">
         {{feed.title}}

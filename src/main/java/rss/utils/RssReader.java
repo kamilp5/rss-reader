@@ -13,6 +13,7 @@ import rss.user.RssItem;
 
 import java.net.URL;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +37,15 @@ public class RssReader {
     }
 
     public List<RssItem> getFeedItems(RssFeed rssFeed) {
+        System.out.println(rssFeed.getUrl());
         SyndFeed feedData = getFeedData(rssFeed.getUrl());
         ArrayList<RssItem> items = new ArrayList<>();
+        Timestamp validAfterDate =Timestamp.valueOf(LocalDateTime.now().minusDays(RssItem.VALID_DAYS_OLD));
         for (SyndEntry entry : feedData.getEntries()) {
             RssItem item = buildRssItem(entry,rssFeed);
-            items.add(item);
+            if(item.getDate().after(validAfterDate)) {
+                items.add(item);
+            }
         }
         return items;
     }

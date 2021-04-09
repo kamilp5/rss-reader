@@ -1,13 +1,13 @@
 package rss.user;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@Table(name = "users")
 public class User {
 
     @Id
@@ -28,5 +28,9 @@ public class User {
     public void addFeed(RssFeed rssFeed){
         UserFeed userFeed = new UserFeed(this,rssFeed);
         getRssFeeds().add(userFeed);
+    }
+
+    public void addSeenRssItems(List<RssItem> items){
+        getSeenRssItems().addAll(items);
     }
 }

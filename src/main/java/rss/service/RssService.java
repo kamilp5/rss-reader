@@ -19,6 +19,8 @@ import rss.user.UserFeed;
 import rss.exception.RssNotFoundException;
 import rss.utils.RssReader;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,7 +90,7 @@ public class RssService {
         List<RssItem> seenItems = user.getSeenRssItems();
         items = setAlreadySeen(items, seenItems);
 
-        seenItems.addAll(items.stream().filter(i -> !(seenItems.contains(i))).collect(Collectors.toList()));
+        user.addSeenRssItems(items.stream().filter(i -> !(seenItems.contains(i))).collect(Collectors.toList()));
         userService.saveUser(user);
 
         return items.map(rssItemMapper::toDto);
@@ -101,8 +103,42 @@ public class RssService {
         return items;
     }
 
-    @Scheduled(fixedRate = 1800000)
-    public void fetchRssItems() {
+    public void updateLastOpenedDate(Long id) {
+        User user = userService.getLoggedUser();
+        Optional<RssItem> newestItem = rssItemRepository.getNewestItemByRssFeedId(id);
+        if (newestItem.isPresent()) {
+            UserFeed userFeed = user.getRssFeeds().stream()
+                    .filter(f -> f.getRssFeed().getId().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new RssNotFoundException(id));
+            userFeed.setLastOpenedDate(newestItem.get().getDate());
+        }
+        userService.saveUser(user);
+    }
+
+    public void addRssItemToSaved(Long id) {
+        User user = userService.getLoggedUser();
+        if (rssItemRepository.isRssItemInUserSaved(user.getId(), id).isPresent()) {
+            return;
+        }
+        RssItem item = rssItemRepository.getOne(id);
+        user.getSavedRssItems().add(item);
+        userService.saveUser(user);
+    }
+
+    public Page<RssItemDto> getSavedRssItems(Pageable pageable) {
+        User user = userService.getLoggedUser();
+        Page<RssItem> items = rssItemRepository.getUserSavedRssItems(user.getId(), pageable);
+        return items.map(rssItemMapper::toDto);
+    }
+
+    public void deleteRssItemFromSaved(Long id) {
+        User user = userService.getLoggedUser();
+        user.getSavedRssItems().removeIf(i -> i.getId().equals(id));
+        userService.saveUser(user);
+    }
+
+    private void fetchRssItems() {
         List<RssFeed> rssFeeds = rssFeedRepository.findAll();
         for (RssFeed rssFeed : rssFeeds) {
             List<RssItem> rssItems = rssReader.getFeedItems(rssFeed);
@@ -113,36 +149,18 @@ public class RssService {
         }
     }
 
-    public void updateLastOpenedDate(Long id) {
-        User user = userService.getLoggedUser();
-        RssItem newestItem = rssItemRepository.getNewestItemByRssFeedId(id);
-        UserFeed userFeed = user.getRssFeeds().stream()
-                .filter(f -> f.getRssFeed().getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RssNotFoundException(id));
-        userFeed.setLastOpenedDate(newestItem.getDate());
-        userService.saveUser(user);
+    private void deleteRssItemsOlderThan(int days) {
+        Timestamp date = Timestamp.valueOf(LocalDateTime.now().minusDays(days));
+        List<RssItem> savedItems = rssItemRepository.getAllSavedItems();
+        List<RssItem> allItems = rssItemRepository.getAllByDateBefore(date);
+        allItems = allItems.stream().filter(i -> !savedItems.contains(i)).collect(Collectors.toList());
+
+        rssItemRepository.deleteAll(allItems);
     }
 
-    public void addRssItemToSaved(Long id) {
-        User user = userService.getLoggedUser();
-        if(rssItemRepository.isRssItemInUserSaved(user.getId(),id).isPresent()){
-            return;
-        }
-        RssItem item = rssItemRepository.getOne(id);
-        user.getSavedRssItems().add(item);
-        userService.saveUser(user);
-    }
-
-    public Page<RssItemDto> getSavedRssItems(Pageable pageable){
-        User user = userService.getLoggedUser();
-        Page<RssItem> items = rssItemRepository.getUserSavedRssItems(user.getId(), pageable);
-        return items.map(rssItemMapper::toDto);
-    }
-
-    public void deleteRssItemFromSaved(Long id) {
-        User user = userService.getLoggedUser();
-        user.getSavedRssItems().removeIf(i -> i.getId().equals(id));
-        userService.saveUser(user);
+    @Scheduled(fixedRate = 1800000)
+    private void schedule(){
+        fetchRssItems();
+        deleteRssItemsOlderThan(RssItem.VALID_DAYS_OLD);
     }
 }
