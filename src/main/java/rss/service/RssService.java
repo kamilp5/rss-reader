@@ -51,7 +51,7 @@ public class RssService {
         return rssFeedRepository.save(rssFeed);
     }
 
-    public RssFeed subscribeRss(String url) {
+    public RssFeed subscribeFeed(String url) {
         Optional<RssFeed> optionalRssFeed = rssFeedRepository.findByUrl(url);
         User user = userService.getLoggedUser();
         RssFeed rssFeed;
@@ -69,7 +69,7 @@ public class RssService {
 
     public void unsubscribeRssFeed(Long id) {
         User user = userService.getLoggedUser();
-        user.getRssFeeds().removeIf(f -> f.getId().getRssFeedId().equals(id));
+        user.removeFeed(id);
         userService.saveUser(user);
     }
 

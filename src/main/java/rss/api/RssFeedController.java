@@ -25,7 +25,7 @@ public class RssFeedController {
 
     @PostMapping("/api/rssFeeds")
     public RssFeed subscribeRssFeed(@RequestBody String url) {
-        return rssService.subscribeRss(url);
+        return rssService.subscribeFeed(url);
     }
 
     @GetMapping("/api/rssFeeds")

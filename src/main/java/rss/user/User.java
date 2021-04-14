@@ -30,6 +30,10 @@ public class User {
         getRssFeeds().add(userFeed);
     }
 
+    public void removeFeed(Long id){
+        getRssFeeds().removeIf(f -> f.getRssFeed().getId().equals(id));
+    }
+
     public void addSeenRssItems(List<RssItem> items){
         getSeenRssItems().addAll(items);
     }
