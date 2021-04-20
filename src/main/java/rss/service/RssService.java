@@ -12,10 +12,10 @@ import rss.dto.RssItemDto;
 import rss.dto.RssItemMapper;
 import rss.repository.RssFeedRepository;
 import rss.repository.RssItemRepository;
-import rss.user.RssFeed;
-import rss.user.RssItem;
-import rss.user.User;
-import rss.user.UserFeed;
+import rss.Model.RssFeed;
+import rss.Model.RssItem;
+import rss.Model.User;
+import rss.Model.UserFeed;
 import rss.exception.RssNotFoundException;
 import rss.utils.RssReader;
 
@@ -122,7 +122,7 @@ public class RssService {
             return;
         }
         RssItem item = rssItemRepository.getOne(id);
-        user.getSavedRssItems().add(item);
+        user.addItemToSaved(item);
         userService.saveUser(user);
     }
 
@@ -134,7 +134,7 @@ public class RssService {
 
     public void deleteRssItemFromSaved(Long id) {
         User user = userService.getLoggedUser();
-        user.getSavedRssItems().removeIf(i -> i.getId().equals(id));
+        user.removeItemFromSaved(id);
         userService.saveUser(user);
     }
 

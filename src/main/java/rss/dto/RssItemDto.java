@@ -1,10 +1,12 @@
 package rss.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Data
+@Builder
 public class RssItemDto {
 
     private Long id;

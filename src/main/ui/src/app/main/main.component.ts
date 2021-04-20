@@ -30,6 +30,7 @@ export class MainComponent implements OnInit {
     this.mainService.newFeed().subscribe(() => {
       this.getFeeds();
     })
+    console.log("co jes")
     if (this.userService.authenticated) {
       this.getFeeds();
     }
@@ -62,8 +63,9 @@ export class MainComponent implements OnInit {
   }
 
   unsubscribeFeed(feedId: number) {
-    this.mainService.unsubscribeRssFeed(feedId).subscribe()
-    this.getFeeds()
+    this.mainService.unsubscribeRssFeed(feedId).subscribe(() =>{
+      this.getFeeds()
+    })
   }
 
   authenticated() {

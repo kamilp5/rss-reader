@@ -8,8 +8,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 import rss.exception.RssNotFoundException;
-import rss.user.RssFeed;
-import rss.user.RssItem;
+import rss.Model.RssFeed;
+import rss.Model.RssItem;
 
 import java.net.URL;
 import java.sql.Timestamp;

@@ -1,7 +1,7 @@
 package rss.dto;
 
 import org.springframework.stereotype.Component;
-import rss.user.RssItem;
+import rss.Model.RssItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 public class RssItemMapper {
 
     public RssItemDto toDto(RssItem rssItem) {
-        RssItemDto dto = new RssItemDto();
-        dto.setId(rssItem.getId());
-        dto.setTitle(rssItem.getTitle());
-        dto.setDate(rssItem.getDate());
-        dto.setDescription(rssItem.getDescription());
-        dto.setImageUrl(rssItem.getImageUrl());
-        dto.setUrl(rssItem.getUrl());
-        dto.setAlreadySeen(rssItem.isAlreadySeen());
-        return dto;
+        return RssItemDto.builder()
+                .id(rssItem.getId())
+                .title(rssItem.getTitle())
+                .date(rssItem.getDate())
+                .description(rssItem.getDescription())
+                .imageUrl(rssItem.getImageUrl())
+                .url(rssItem.getUrl())
+                .alreadySeen(rssItem.isAlreadySeen())
+                .build();
     }
 
     public List<RssItemDto> toDtoList(List<RssItem> items) {

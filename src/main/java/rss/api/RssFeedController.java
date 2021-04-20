@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import rss.dto.RssFeedDto;
 import rss.dto.RssItemDto;
 import rss.service.RssService;
-import rss.user.RssFeed;
+import rss.Model.RssFeed;
 
 import java.util.List;
 

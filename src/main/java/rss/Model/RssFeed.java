@@ -1,4 +1,4 @@
-package rss.user;
+package rss.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

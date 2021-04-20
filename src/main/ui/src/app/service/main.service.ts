@@ -34,7 +34,7 @@ export class MainService {
 
   unsubscribeRssFeed(feedId): Observable<any> {
     const url = `/api/rssFeeds/${feedId}`;
-    return this.http.delete(url, null)
+    return this.http.delete(url)
   }
 
   newFeed(): Observable<RssFeed> {

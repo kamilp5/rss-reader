@@ -1,4 +1,4 @@
-package rss.user;
+package rss.Model;
 
 import lombok.Data;
 import javax.persistence.*;
@@ -36,5 +36,11 @@ public class User {
 
     public void addSeenRssItems(List<RssItem> items){
         getSeenRssItems().addAll(items);
+    }
+    public void addItemToSaved(RssItem item){
+        getSavedRssItems().add(item);
+    }
+    public void removeItemFromSaved(Long id){
+        getSavedRssItems().removeIf(i -> i.getId().equals(id));
     }
 }

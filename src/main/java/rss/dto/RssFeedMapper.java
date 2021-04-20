@@ -1,7 +1,7 @@
 package rss.dto;
 
 import org.springframework.stereotype.Component;
-import rss.user.UserFeed;
+import rss.Model.UserFeed;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 public class RssFeedMapper {
 
     public RssFeedDto toDto(UserFeed userFeed) {
-        RssFeedDto dto = new RssFeedDto();
-        dto.setId(userFeed.getId().getRssFeedId());
-        dto.setTitle(userFeed.getRssFeed().getTitle());
-        dto.setUrl(userFeed.getRssFeed().getUrl());
-        dto.setImageUrl(userFeed.getRssFeed().getImageUrl());
-        dto.setLastOpenedDate(userFeed.getLastOpenedDate());
-        return dto;
+        return RssFeedDto.builder()
+                .id(userFeed.getId().getRssFeedId())
+                .title(userFeed.getRssFeed().getTitle())
+                .url(userFeed.getRssFeed().getUrl())
+                .imageUrl(userFeed.getRssFeed().getImageUrl())
+                .lastOpenedDate(userFeed.getLastOpenedDate())
+                .build();
     }
 
     public List<RssFeedDto> toDtoList(List<UserFeed> userFeeds) {

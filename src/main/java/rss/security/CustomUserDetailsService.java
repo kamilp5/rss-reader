@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import rss.service.UserService;
-import rss.user.User;
+import rss.Model.User;
 
 import java.util.Collections;
 
